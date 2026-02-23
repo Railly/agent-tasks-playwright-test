@@ -64,21 +64,28 @@ bun playwright show-report
 ## Example Code
 
 ```typescript
-import { createClerkClient } from '@clerk/backend';
+import { test, expect } from '@playwright/test';
+import { createAgentTestingTask } from '@clerk/testing/playwright';
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY
+test.describe('Logged in state', () => {
+  test('should display logged in message', async ({ page }) => {
+    const userId = 'user_...';
+
+    const { url } = await createAgentTestingTask({
+      secretKey: process.env.CLERK_SECRET_KEY,
+      onBehalfOf: { userId },
+      permissions: "*",
+      agentName: "test-agent",
+      taskDescription: "Testing Agent Tasks",
+      redirectUrl: "http://localhost:3000/",
+    });
+
+    await page.goto(url);
+
+    const header = page.locator('header');
+    await expect(header).toContainText(`User is logged in as ${userId}`);
+  });
 });
-
-const agentTask = await clerkClient.agentTasks.create({
-  onBehalfOf: { userId: 'user_...' },
-  permissions: '*',
-  agentName: 'test-agent',
-  taskDescription: 'Testing Agent Tasks',
-  redirectUrl: 'https://your-app.com',
-});
-
-// Navigate to agentTask.url with Playwright
 ```
 
 **Note**: `permissions` must be `"*"` (not `"all"`)

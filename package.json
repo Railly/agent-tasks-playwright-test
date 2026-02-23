@@ -11,7 +11,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@clerk/backend": "^2.32.0",
+    "@clerk/testing": "^1.13.22",
     "dotenv": "^17.3.1"
   }
 }

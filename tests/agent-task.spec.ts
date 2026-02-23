@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { createClerkClient } from '@clerk/backend';
+import { createAgentTestingTask } from '@clerk/testing/playwright';
 import { config } from 'dotenv';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
@@ -14,23 +14,23 @@ const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY!;
 const TEST_USER_ID = process.env.TEST_USER_ID!;
 const TEST_APP_URL = process.env.TEST_APP_URL!;
 
-test.describe('Agent Tasks Testing with @clerk/backend', () => {
+test.describe('Agent Tasks Testing with @clerk/testing/playwright', () => {
   test('should create agent task and authenticate user via generated URL', async ({ page }) => {
     console.log('\n🧪 Starting Agent Task Test...\n');
 
-    // Step 1: Create Agent Task using Clerk Backend SDK
-    console.log('📝 Step 1: Creating Agent Task using @clerk/backend...');
-    const clerkClient = createClerkClient({ secretKey: CLERK_SECRET_KEY });
+    // Step 1: Create Agent Task using @clerk/testing/playwright helper
+    console.log('📝 Step 1: Creating Agent Task using @clerk/testing/playwright...');
 
     let agentTask;
     try {
-      agentTask = await clerkClient.agentTasks.create({
+      agentTask = await createAgentTestingTask({
+        secretKey: CLERK_SECRET_KEY,
         onBehalfOf: {
           userId: TEST_USER_ID,
         },
         permissions: '*',
         agentName: 'playwright-test-agent',
-        taskDescription: 'Testing Agent Tasks feature with real Playwright test',
+        taskDescription: 'Testing Agent Tasks feature with @clerk/testing/playwright',
         redirectUrl: TEST_APP_URL,
         sessionMaxDurationInSeconds: 3600,
       });
@@ -111,7 +111,7 @@ test.describe('Agent Tasks Testing with @clerk/backend', () => {
 
     // Step 4: Verify final state
     console.log('\n✨ Test Summary:');
-    console.log('   ✅ Agent Task created via @clerk/backend');
+    console.log('   ✅ Agent Task created via @clerk/testing/playwright');
     console.log('   ✅ URL generated successfully');
     console.log('   ✅ Clerk Handshake flow completed');
     console.log('   ✅ User redirected to app');
