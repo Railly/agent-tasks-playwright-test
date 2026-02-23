@@ -1,0 +1,17 @@
+{
+  "name": "agent-tasks-playwright-test",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@clerk/backend": "^2.32.0",
+    "dotenv": "^17.3.1"
+  }
+}
