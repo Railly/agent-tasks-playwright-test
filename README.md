@@ -90,9 +90,55 @@ test.describe('Logged in state', () => {
 
 **Note**: `permissions` must be `"*"` (not `"all"`)
 
+## agent-browser Integration
+
+Skip manual login flows by combining Agent Tasks with [agent-browser](https://github.com/vercel-labs/agent-browser):
+
+### Setup
+
+```bash
+# Install agent-browser globally
+npm install -g agent-browser
+
+# Set your Clerk secret key
+export CLERK_SECRET_KEY=sk_test_...
+```
+
+### Usage
+
+```bash
+# Authenticate as user and open in browser
+./scripts/agent-browser-clerk.sh user_123 https://your-app.com
+
+# Or with email identifier
+./scripts/agent-browser-clerk.sh user@example.com https://your-app.com
+
+# Headed mode (visible browser)
+./scripts/agent-browser-clerk.sh user_123 https://your-app.com --headed
+```
+
+The script:
+1. Creates an Agent Task via Clerk API
+2. Opens the pre-authenticated URL in agent-browser
+3. Leaves a persistent session for interaction
+
+After running, you can interact with the authenticated session:
+
+```bash
+# Use the session name from script output
+export AGENT_BROWSER_SESSION=clerk-{timestamp}
+
+agent-browser snapshot -i
+agent-browser screenshot ~/Desktop/page.png
+agent-browser click @e1
+agent-browser close  # When done
+```
+
 ## Project Structure
 
 ```
+├── scripts/
+│   └── agent-browser-clerk.sh    # agent-browser integration
 ├── tests/
 │   ├── agent-task.spec.ts        # Full SDK test
 │   └── agent-task-simple.spec.ts # Curl + Playwright test
